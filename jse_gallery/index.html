@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSE tech- Gallery</title>
+
+	<script type='text/javascript' src='unitegallery/js/jquery-11.0.min.js'></script>	
+	
+	<script type='text/javascript' src='unitegallery/js/ug-common-libraries.js'></script>	
+	<script type='text/javascript' src='unitegallery/js/ug-functions.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-thumbsgeneral.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-thumbsstrip.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-touchthumbs.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-panelsbase.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-strippanel.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-gridpanel.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-thumbsgrid.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-tiles.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-tiledesign.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-avia.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-slider.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-sliderassets.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-touchslider.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-zoomslider.js'></script>	
+	<script type='text/javascript' src='unitegallery/js/ug-video.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-gallery.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-lightbox.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-carousel.js'></script>
+	<script type='text/javascript' src='unitegallery/js/ug-api.js'></script>
+
+	<link rel='stylesheet' href='unitegallery/css/unite-gallery.css' type='text/css' />
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<script type='text/javascript' src='unitegallery/themes/tiles/ug-theme-tiles.js'></script>
+	<link rel='stylesheet' 		  href='unitegallery/skins/alexis/alexis.css' type='text/css' />
+	
+	
+</head>
+
+<body>
+	
+<div class='container'>
+	<div id='setcont1' style='padding-top:2%;' class='setcont'>
+
+		<h2>Albums</h2>
+	
+		<div id="albums" class='row'></div>
+			<div>
+			
+			<button style='width:100%;' class='btn btn-primary' id='nxt' onclick='next_btn()'>Show More</button>
+		</div>
+	</div>
+
+	<div id='setcont2' class='setcont' style='padding-top:2%;'>
+		<div style='padding-top:2%; padding-bottom:2%;'>
+		<button class='btn btn-primary' onclick='setcont(1)'>Back</button>
+		</div>
+		<div id="gallery" style="display:none;"></div>
+	</div>
+	
+	</div>
+	<input type='hidden' id='offset' value='0'>
+	<script type="text/javascript">
+
+		$(document).ready(function(){
+$('#bk').hide();
+setalbums(10,0);
+setcont(1);
+		});
+		
+function setcont(n){
+	$('.setcont').hide();
+	$('#setcont'+n).show();
+	if(n==1){
+		$('#gallery').html("");
+	}
+}
+
+
+
+function next_btn(){
+var offset=$('#offset').val();
+var next_offset=(parseInt(offset)+10);
+if(next_offset!=0){ $('#bk').show(); }
+$('#offset').val(next_offset);
+setalbums(10,next_offset)
+}
+
+function back_offset(){
+var offset=$('#offset').val();
+var next_offset=(parseInt(offset)-10)-1;
+if(next_offset==0){ $('#bk').hide(); }
+$('#offset').val(next_offset);
+setalbums(10,next_offset)	
+}
+
+
+function setalbums(limit,offset){
+$.getJSON('https://graph.facebook.com/v2.12/1099813836843063/albums?fields=created_time,name,id,description,cover_photo,link&limit='+limit+'&offset='+offset+'&access_token=EAABZBstjNtoQBAOEgF0JgqRqvuQ4mdZC5oKPIKuh2DWFic0X8QG5z6XzVfrG9ZAzWykjZAfj9M3xIKtupQiOsMYoZBlhaK5SoozqpE2OybU1UxIFustqUtdF17K9pLU3nUL9O7WO4aC0ZCNmcZC4VvXj9SZAtjn4m3EWsbuZAzX0byRqcRj5hqIfn&callback=?', function(json, status, xhr) { console.log(json);
+        var n=json.data;
+        var str="";
+	for(var x=0;x<n.length;x++){
+	var cover_photo_id=n[x].id;
+	var name=n[x].name;
+	getcover_photo(cover_photo_id,name);
+	
+     }
+
+});
+
+}
+
+function getcover_photo(id,name){
+$.getJSON('https://graph.facebook.com/v2.12/'+id+'/photos?fields=album,height,source&limit=1&access_token=EAABZBstjNtoQBAOEgF0JgqRqvuQ4mdZC5oKPIKuh2DWFic0X8QG5z6XzVfrG9ZAzWykjZAfj9M3xIKtupQiOsMYoZBlhaK5SoozqpE2OybU1UxIFustqUtdF17K9pLU3nUL9O7WO4aC0ZCNmcZC4VvXj9SZAtjn4m3EWsbuZAzX0byRqcRj5hqIfn&callback=?', function(json, status, xhr) { console.log(json);
+          var n = json.data;
+
+          	var source=n[0].source;
+        $('#albums').append(`
+        	<div onclick='getPhotos(`+id+`)' style='cursor:pointer; padding:2%; margin:1%; box-shadow:0 0 1px rgba(0,0,0,0.4);' class='col-md-3 col-lg-2 col-sm-4'>
+        	<div style='height:200px; overflow:hidden;'>
+		<img src="`+source+`" width="100%;"/>
+		</div>
+		<div style='padding-top:10px;'><h2 style="font-size:15px;">`+name+` Gallery</h2></div>
+		</div>
+	`);  	
+
+      });   	
+}
+
+
+
+
+
+		function getPhotos(id){
+			setcont(2);
+			$.getJSON('https://graph.facebook.com/v2.12/'+id+'/photos?fields=album,height,source&access_token=EAABZBstjNtoQBAOEgF0JgqRqvuQ4mdZC5oKPIKuh2DWFic0X8QG5z6XzVfrG9ZAzWykjZAfj9M3xIKtupQiOsMYoZBlhaK5SoozqpE2OybU1UxIFustqUtdF17K9pLU3nUL9O7WO4aC0ZCNmcZC4VvXj9SZAtjn4m3EWsbuZAzX0byRqcRj5hqIfn&callback=?', function(json, status, xhr) {
+          var n = json.data;
+        var str="";
+          for (var i = 0, l = n.length - 1; i < l; i++) {
+          	var source=n[i].source;
+          	str+=`
+					<img alt="`+n[i].id+`"
+					 src="`+source+`"
+					 data-image="`+source+`"
+					 data-description="`+n[i].album.name+`">
+									`
+          	
+           
+          }
+          $('#gallery').append(str);
+
+			$("#gallery").unitegallery({
+			gallery_skin:"alexis",
+slider_bullets_skin:"alexis"}
+			);
+      
+          
+      });       
+
+
+
+		
+		}
+	</script>
+
+
+</body>
+<script type="text/javascript" src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js'></script>
+</html>
